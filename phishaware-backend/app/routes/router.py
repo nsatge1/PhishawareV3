@@ -44,7 +44,7 @@ def ai_analyze_phishing(request: CheckContentRequest):
     return ai_result
 
 
-@router.get("/quiz/questions", response_model=List[QuestionOut])
+@router.get("/quiz/questions", response_model=list[QuestionOut])
 def get_random_phishing_questions_by_level(
     level: str = Query(None, description="Niveau de la question (facile, moyen, difficile)"),
     db: Session = Depends(get_db)
@@ -58,4 +58,4 @@ def get_random_phishing_questions_by_level(
         raise HTTPException(status_code=404, detail="No questions found.")
 
     random.shuffle(questions)
-    return questions[:10] 
+    return questions[:7] 
