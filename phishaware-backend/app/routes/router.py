@@ -8,6 +8,11 @@ from models.quiz import Question
 import random
 
 router = APIRouter()
+
+@router.get("/")
+def read_root():
+    return {"message": "Welcome to the PhishAware API!"}
+
 @router.post("/check-phishing/", response_model=PhishingResponse)
 def check_phishing(request: CheckContentRequest, db=Depends(get_db)):
     content = request.content
@@ -39,8 +44,8 @@ def ai_analyze_phishing(request: CheckContentRequest):
     return ai_result
 
 
-@router.get("/quiz/random", response_model=QuestionOut)
-def get_random_phishing_question(
+@router.get("/quiz/questions", response_model=List[QuestionOut])
+def get_random_phishing_questions_by_level(
     level: str = Query(None, description="Niveau de la question (facile, moyen, difficile)"),
     db: Session = Depends(get_db)
 ):
@@ -52,5 +57,5 @@ def get_random_phishing_question(
     if not questions:
         raise HTTPException(status_code=404, detail="No questions found.")
 
-    question = random.choice(questions)
-    return question
+    random.shuffle(questions)
+    return questions[:10] 
