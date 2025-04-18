@@ -21,7 +21,7 @@ class QuestionOut(BaseModel):
     id: int
     level: str
     text: str
-    isPhishing : bool
+    is_phishing : bool
     explanation: str
     url: str
 
