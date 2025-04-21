@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from models.phishing import Phishing
 from schemas.schemas import CheckContentRequest, PhishingResponse, AIResponse, QuestionOut
 from services.services import check_database, ai_phishing_analysis
