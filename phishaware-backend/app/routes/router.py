@@ -13,6 +13,10 @@ router = APIRouter()
 def read_root():
     return {"message": "Welcome to the PhishAware API!"}
 
+@router.head("/")
+def head_root():
+    return Response(status_code=200)
+    
 @router.post("/check-phishing/", response_model=PhishingResponse)
 def check_phishing(request: CheckContentRequest, db=Depends(get_db)):
     content = request.content
