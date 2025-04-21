@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "217078015730",
+    "project_id": "phishaware-e118c",
+    "storage_bucket": "phishaware-e118c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217078015730:android:c09fa67b162cf1ca2dd26b",
+        "android_client_info": {
+          "package_name": "com.phishaware"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXpqqi_T9OmJ75TveYnvpwTlQLkVHvHd8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
