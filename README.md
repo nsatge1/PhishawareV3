@@ -43,7 +43,8 @@ Le projet mobile React Native se trouve dans le dossier `frontend/`.
 
 1. Installez **Android Studio** (avec un AVD, simulateur Android).
 2. Assurez-vous d’avoir **accès à Internet** pour que l’application puisse communiquer avec le backend.
-3. Utilisez l’**APK situé à la racine du projet** (`PhishAwareV3.apk`) pour une installation directe sur un émulateur ou un appareil Android.
+3. 📥 [Télécharger l'APK (PhishAware)](https://drive.google.com/drive/folders/1cDkYvHJCbexPhknRv6koM1ftxF7YqWip?usp=drive_link)
+4. Utilisez l’**APK** pour une installation directe sur un émulateur ou un appareil Android. (Glisser l'APK dans l'émulateur)
 
 💡 L’APK contient déjà une version préconfigurée de l’application prête à tester.
 
