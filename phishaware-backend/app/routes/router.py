@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from models.phishing import Phishing
 from schemas.schemas import CheckContentRequest, PhishingResponse, AIResponse, QuestionOut
-from services.services import check_database, ai_phishing_analysis
+from services.services import check_database, ai_phishing_analysis, ai_phishing_analysis_openai
 from sqlalchemy.orm import Session
 from config.database import get_db
 from models.quiz import Question
@@ -45,6 +45,11 @@ def add_phishing_entry(request: CheckContentRequest, is_phishing: bool, db=Depen
 def ai_analyze_phishing(request: CheckContentRequest):
     """Endpoint for AI-based phishing analysis"""
     ai_result = ai_phishing_analysis(request.content)
+    return ai_result
+
+@router.post("/ai-phishing-analysis-openai/", response_model=AIResponse)
+def ai_analyze_phishing(request: CheckContentRequest):
+    ai_result = ai_phishing_analysis_openai(request.content)
     return ai_result
 
 

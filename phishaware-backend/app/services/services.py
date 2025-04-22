@@ -7,6 +7,18 @@ import joblib
 import numpy as np
 import re
 from scipy.sparse import hstack
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
+
+# Charger les variables du fichier .env
+load_dotenv()
+
+# Récupérer la variable
+api_key = os.getenv("API_KEY")
+
+client = OpenAI(api_key=api_key)
+
 
 # Load sentence transformer model
 modelV1 = SentenceTransformer("all-MiniLM-L6-v2")
@@ -110,4 +122,86 @@ def ai_phishing_analysis(message: str):
             "risk_score": 0,
             "advice": "❌ Erreur lors de l’analyse.",
             "analysis": "Une erreur est survenue pendant l'analyse du message."
+        }
+
+
+def ai_phishing_analysis_openai(content: str):
+    try:
+        prompt = f'''
+You are a cybersecurity expert specialized in phishing detection.
+
+Analyze the following message and respond in **this exact structured format**:
+
+---
+Phishing: [Yes/No]
+
+Risk Assessment Score: [Number from 0 to 100]
+
+Advice: [One sentence warning or reassurance]
+
+Analysis:
+1. **Content**: Explain what the message says and any suspicious elements.
+2. **Context**: Consider if the sender is unknown, or if there's a mismatch in language, etc.
+3. **Urgency/Pressure**: Check for urgency or emotional manipulation (e.g., time pressure, threats).
+---
+
+Message to analyze:
+\"\"\"{content}\"\"\"
+'''
+
+
+        completion = client.chat.completions.create(
+            model="gpt-4-turbo",
+            messages=[
+                {"role": "system", "content": "Always follow the given structure precisely."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+
+        response = completion.choices[0].message.content.strip()
+
+        is_phishing = "phishing: yes" in response.lower()
+
+        lines = response.splitlines()
+        
+        advice_line = next((line for line in lines if line.lower().startswith("advice:")), "")
+        advice = advice_line.split(":", 1)[-1].strip() if advice_line else (
+            "⚠️ Be cautious! This looks like a phishing attack." if is_phishing else "✅ This seems safe.")
+
+        
+        risk_line = next((line for line in lines if "risk assessment score" in line.lower()), "")
+        try:
+            risk_score = int(''.join(filter(str.isdigit, risk_line)))
+        except:
+            risk_score = random.randint(70, 100) if is_phishing else random.randint(1, 40)
+
+       
+        analysis_start = False
+        analysis_lines = []
+
+        for line in lines:
+            if line.lower().startswith("analysis:"):
+                analysis_start = True
+                analysis_lines.append(line.split(":", 1)[-1].strip())
+            elif analysis_start:
+                if line.lower().startswith(("advice:", "risk", "phishing:")):
+                    break
+                analysis_lines.append(line.strip())
+
+        analysis = "\n".join(analysis_lines).strip() if analysis_lines else response
+
+        return {
+            "is_phishing": is_phishing,
+            "risk_score": risk_score,
+            "advice": advice,
+            "analysis": analysis
+        }
+
+    except Exception as e:
+        return {
+            "error": str(e),
+            "is_phishing": False,
+            "risk_score": 0,
+            "advice": "❌ Error in analysis.",
+            "analysis": "An error occurred while analyzing the message."
         }

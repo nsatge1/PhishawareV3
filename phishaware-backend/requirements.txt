@@ -4,3 +4,5 @@ sqlalchemy
 joblib
 sentence-transformers
 scikit-learn
+python-dotenv
+openai
