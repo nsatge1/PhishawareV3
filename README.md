@@ -79,8 +79,3 @@ To build the app yourself, see [`phishaware/README.md`](phishaware/README.md).
 - `google-services.json` (Firebase config) is public by design. Its API key should be restricted to the app in the Google Cloud console.
 - Write and paid endpoints need an admin token. Without `ADMIN_TOKEN` on the server, they are closed for everyone.
 
-## Possible improvements
-
-- [ ] Rate limiting on the public endpoints
-- [ ] Move the NewsAPI call to the backend, so the key is not inside the APK
-- [ ] Unit tests for the API and the model
