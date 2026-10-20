@@ -5,6 +5,7 @@ from services.services import check_database, ai_phishing_analysis, ai_phishing_
 from sqlalchemy.orm import Session
 from config.database import get_db
 from models.quiz import Question
+from security import require_admin_token
 import random
 
 router = APIRouter()
@@ -33,7 +34,8 @@ def check_phishing(request: CheckContentRequest, db=Depends(get_db)):
 
     return {"found_in_db": False, "message": "Content not found in DB"}
 
-@router.post("/add-phishing/")
+# Admin only: without a valid X-Admin-Token header, anyone could poison the database.
+@router.post("/add-phishing/", dependencies=[Depends(require_admin_token)])
 def add_phishing_entry(request: CheckContentRequest, is_phishing: bool, db=Depends(get_db)):
     """Manually add phishing data"""
     record = Phishing(content=request.content, is_phishing=is_phishing)
@@ -47,8 +49,9 @@ def ai_analyze_phishing(request: CheckContentRequest):
     ai_result = ai_phishing_analysis(request.content)
     return ai_result
 
-@router.post("/ai-phishing-analysis-openai/", response_model=AIResponse)
-def ai_analyze_phishing(request: CheckContentRequest):
+# Admin only: each call costs OpenAI credits, so it must not be open to everyone.
+@router.post("/ai-phishing-analysis-openai/", response_model=AIResponse, dependencies=[Depends(require_admin_token)])
+def ai_analyze_phishing_openai(request: CheckContentRequest):
     ai_result = ai_phishing_analysis_openai(request.content)
     return ai_result
 

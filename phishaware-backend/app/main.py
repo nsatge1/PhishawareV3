@@ -2,10 +2,7 @@ from fastapi import FastAPI
 from routes.router import router
 from config.database import Base, engine
 import logging
-import os
 
-print("Current working directory:", os.getcwd())
-print("Database URL:", os.getenv("DATABASE_URL"))
 
 
 # Setup logging
